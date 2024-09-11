@@ -5,10 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kalendarz spotkań</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-
     <style>
-        /* Podział ekranu na lewą i prawą część */
         .container {
             display: flex;
             height: 100vh;
@@ -33,6 +30,19 @@
         .meeting-list li {
             margin: 10px 0;
         }
+
+        /* Styl responsywny */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .calendar-container, .details-container {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #ccc;
+            }
+        }
     </style>
 </head>
 <body>
@@ -51,7 +61,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        const jsonUrl = 'https://gist.githubusercontent.com/Doragon05/c3de4d68399b052cf62200c57309d07a/raw/fa84b172df6cfc6fdf8d80472a39f41b054d6017/spotkania.json'; // Zmień na swój link
+        const jsonUrl = 'https://gist.githubusercontent.com/Doragon05/c3de4d68399b052cf62200c57309d07a/raw/fa84b172df6cfc6fdf8d80472a39f41b054d6017/spotkania.json';
 
         // Inicjalizacja kalendarza Flatpickr
         flatpickr("#calendar", {
