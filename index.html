@@ -61,9 +61,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
-        // Link do pliku JSON z Gist z dodanym unikalnym parametrem
+        // Link do pliku JSON
         const jsonUrl = 'https://api.npoint.io/cbe1be35dece5e2b2c40';
-        const uniqueUrl = `${jsonUrl}?t=${new Date().getTime()}`; // Dodaje unikalny parametr do URL
 
         // Inicjalizacja kalendarza Flatpickr
         flatpickr("#calendar", {
@@ -75,7 +74,7 @@
         });
 
         // Funkcja do pobierania danych JSON
-        fetch(uniqueUrl)
+        fetch(jsonUrl)
             .then(response => response.json())
             .then(data => {
                 window.meetingsData = data; // Zapisanie danych globalnie
@@ -95,7 +94,10 @@
             if (filteredMeetings.length > 0) {
                 filteredMeetings.forEach(meeting => {
                     const listItem = document.createElement('li');
-                    listItem.textContent = `${meeting.gmina} - ${meeting.procent}% ukończenia`;
+                    const wielokaty = meeting.wielokaty === null ? 'n/d' : meeting.wielokaty;
+                    const procent = meeting.procent === '#VALUE!' ? 'n/d' : meeting.procent;
+
+                    listItem.textContent = `${meeting.gmina} - Manager: ${meeting.manager}, Wielokąty: ${wielokaty}, Procent: ${procent}%`;
                     meetingList.appendChild(listItem);
                 });
             } else {
