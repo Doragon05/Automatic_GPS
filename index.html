@@ -61,7 +61,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <script>
+        // Link do pliku JSON z Gist z dodanym unikalnym parametrem
         const jsonUrl = 'https://gist.githubusercontent.com/Doragon05/c3de4d68399b052cf62200c57309d07a/raw/fa84b172df6cfc6fdf8d80472a39f41b054d6017/spotkania.json';
+        const uniqueUrl = `${jsonUrl}?t=${new Date().getTime()}`; // Dodaje unikalny parametr do URL
 
         // Inicjalizacja kalendarza Flatpickr
         flatpickr("#calendar", {
@@ -73,7 +75,7 @@
         });
 
         // Funkcja do pobierania danych JSON
-        fetch(jsonUrl)
+        fetch(uniqueUrl)
             .then(response => response.json())
             .then(data => {
                 window.meetingsData = data; // Zapisanie danych globalnie
