@@ -1,111 +1,111 @@
-<!DOCTYPE html>
-<html lang="pl">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalendarz spotkań</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-    <style>
-        .container {
-            display: flex;
-            height: 100vh;
-        }
-
-        .calendar-container {
-            width: 40%;
-            border-right: 1px solid #ccc;
-            padding: 20px;
-        }
-
-        .details-container {
-            width: 60%;
-            padding: 20px;
-        }
-
-        .meeting-list {
-            list-style-type: none;
-            padding: 0;
-        }
-
-        .meeting-list li {
-            margin: 10px 0;
-        }
-
-        /* Styl responsywny */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .calendar-container, .details-container {
-                width: 100%;
-                border-right: none;
-                border-bottom: 1px solid #ccc;
-            }
-        }
-    </style>
-</head>
-<body>
-    <h1>Kalendarz spotkań</h1>
-    <div class="container">
-        <div class="calendar-container">
-            <input id="calendar" type="text" placeholder="Wybierz datę" style="width: 100%; padding: 10px; font-size: 16px;">
-        </div>
-        <div class="details-container">
-            <h2>Spotkania na wybrany dzień</h2>
-            <ul id="meeting-list" class="meeting-list">
-                <!-- Lista gmin pojawi się tutaj -->
-            </ul>
-        </div>
-    </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script> <!-- Dodanie pliku językowego -->
-    <script>
-        // Link do pliku JSON
-        const jsonUrl = 'https://script.google.com/macros/s/AKfycbzez77uRhYpXHJor5Byeud9FjLQ24-VtuSyqira-hf0lZXKFa9xdnAUR5HNaLI1tL31bQ/exec';
-
-        // Inicjalizacja kalendarza Flatpickr z ustawieniem języka polskiego
-        flatpickr("#calendar", {
-            locale: 'pl', // Ustawienie języka na polski
-            inline: true,
-            dateFormat: "d.m.Y",
-            onChange: function(selectedDates, dateStr, instance) {
-                displayMeetings(dateStr);
-            }
-        });
-
-        // Funkcja do pobierania danych JSON
-        fetch(jsonUrl)
-            .then(response => response.json())
-            .then(data => {
-                window.meetingsData = data; // Zapisanie danych globalnie
-            })
-            .catch(error => {
-                console.error('Błąd podczas pobierania danych JSON:', error);
-            });
-
-        // Funkcja do wyświetlania spotkań na wybrany dzień
-        function displayMeetings(dateStr) {
-            const meetingList = document.getElementById('meeting-list');
-            meetingList.innerHTML = ''; // Wyczyść listę
-
-            // Filtruj spotkania na podstawie wybranej daty
-            const filteredMeetings = window.meetingsData.filter(meeting => meeting.data_spotkania === dateStr);
-
-            if (filteredMeetings.length > 0) {
-                filteredMeetings.forEach(meeting => {
-                    const listItem = document.createElement('li');
-                    const wielokaty = meeting.wielokaty === null ? 'n/d' : meeting.wielokaty;
-                    const procent = meeting.procent === '#VALUE!' ? 'n/d' : meeting.procent;
-
-                    listItem.textContent = `${meeting.gmina} - Manager: ${meeting.manager}, Wielokąty: ${wielokaty}, Procent: ${procent}%`;
-                    meetingList.appendChild(listItem);
-                });
-            } else {
-                meetingList.innerHTML = '<li>Brak spotkań na wybrany dzień.</li>';
-            }
-        }
-    </script>
-</body>
+<!DOCTYPE html> 
+<html lang="pl"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Kalendarz spotkań</title> 
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> 
+    <style> 
+        .container { 
+            display: flex; 
+            height: 100vh; 
+        } 
+ 
+        .calendar-container { 
+            width: 40%; 
+            border-right: 1px solid #ccc; 
+            padding: 20px; 
+        } 
+ 
+        .details-container { 
+            width: 60%; 
+            padding: 20px; 
+        } 
+ 
+        .meeting-list { 
+            list-style-type: none; 
+            padding: 0; 
+        } 
+ 
+        .meeting-list li { 
+            margin: 10px 0; 
+        } 
+ 
+        /* Styl responsywny */ 
+        @media (max-width: 768px) { 
+            .container { 
+                flex-direction: column; 
+            } 
+ 
+            .calendar-container, .details-container { 
+                width: 100%; 
+                border-right: none; 
+                border-bottom: 1px solid #ccc; 
+            } 
+        } 
+    </style> 
+</head> 
+<body> 
+    <h1>Kalendarz spotkań</h1> 
+    <div class="container"> 
+        <div class="calendar-container"> 
+            <input id="calendar" type="text" placeholder="Wybierz datę" style="width: 100%; padding: 10px; font-size: 16px;"> 
+        </div> 
+        <div class="details-container"> 
+            <h2>Spotkania na wybrany dzień</h2> 
+            <ul id="meeting-list" class="meeting-list"> 
+                <!-- Lista gmin pojawi się tutaj --> 
+            </ul> 
+        </div> 
+    </div> 
+ 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script> <!-- Dodanie pliku językowego --> 
+    <script> 
+        // Link do pliku JSON 
+        const jsonUrl = 'https://script.google.com/macros/s/AKfycbzez77uRhYpXHJor5Byeud9FjLQ24-VtuSyqira-hf0lZXKFa9xdnAUR5HNaLI1tL31bQ/exec'; 
+ 
+        // Inicjalizacja kalendarza Flatpickr z ustawieniem języka polskiego 
+        flatpickr("#calendar", { 
+            locale: 'pl', // Ustawienie języka na polski 
+            inline: true, 
+            dateFormat: "d.m.Y", 
+            onChange: function(selectedDates, dateStr, instance) { 
+                displayMeetings(dateStr); 
+            } 
+        }); 
+ 
+        // Funkcja do pobierania danych JSON 
+        fetch(jsonUrl) 
+            .then(response => response.json()) 
+            .then(data => { 
+                window.meetingsData = data; // Zapisanie danych globalnie 
+            }) 
+            .catch(error => { 
+                console.error('Błąd podczas pobierania danych JSON:', error); 
+            }); 
+ 
+        // Funkcja do wyświetlania spotkań na wybrany dzień 
+        function displayMeetings(dateStr) { 
+            const meetingList = document.getElementById('meeting-list'); 
+            meetingList.innerHTML = ''; // Wyczyść listę 
+ 
+            // Filtruj spotkania na podstawie wybranej daty 
+            const filteredMeetings = window.meetingsData.filter(meeting => meeting.data_spotkania === dateStr); 
+ 
+            if (filteredMeetings.length > 0) { 
+                filteredMeetings.forEach(meeting => { 
+                    const listItem = document.createElement('li'); 
+                    const wielokaty = meeting.wielokaty === null ? 'n/d' : meeting.wielokaty; 
+                    const procent = meeting.procent === '#VALUE!' ? 'n/d' : meeting.procent; 
+ 
+                    listItem.textContent = `${meeting.gmina} - Manager: ${meeting.manager}, Wielokąty: ${wielokaty}, Procent: ${procent}%`; 
+                    meetingList.appendChild(listItem); 
+                }); 
+            } else { 
+                meetingList.innerHTML = '<li>Brak spotkań na wybrany dzień.</li>'; 
+            } 
+        } 
+    </script> 
+</body> 
 </html>
