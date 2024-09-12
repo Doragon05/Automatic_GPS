@@ -126,6 +126,8 @@
                             listItem.className = 'high-percentage';
                         } else if (procentValue >= 70) {
                             listItem.className = 'medium-percentage';
+                        } else if (procentValue == 0) {
+                            listItem.className = 'medium-percentage';
                         } else {
                             listItem.className = 'low-percentage';
                         }
