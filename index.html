@@ -28,7 +28,14 @@
         } 
  
         .meeting-list li { 
-            margin: 10px 0; 
+            margin: 20px 0; /* Zwiększenie interlinii */
+            padding: 10px; /* Dodanie paddingu dla lepszej czytelności */
+            border: 1px solid #ccc; /* Dodanie obramowania dla przypominania tabeli */
+            border-radius: 5px; /* Zaokrąglenie narożników */
+        } 
+ 
+        .meeting-list .gmina { 
+            font-weight: bold; /* Pogrubienie nazw gmin */
         } 
  
         /* Styl responsywny */ 
@@ -98,8 +105,15 @@
                     const listItem = document.createElement('li'); 
                     const wielokaty = meeting.wielokaty === null ? 'n/d' : meeting.wielokaty; 
                     const procent = meeting.procent === '#VALUE!' ? 'n/d' : meeting.procent; 
- 
-                    listItem.textContent = `${meeting.gmina} - Manager: ${meeting.manager}, Wielokąty: ${wielokaty}, Procent: ${procent}%`; 
+                    const sołtysi = meeting.sołtysi === null ? 'n/d' : meeting.sołtysi; 
+                    const kościoły = meeting.kościoły === null ? 'n/d' : meeting.kościoły; 
+
+                    listItem.innerHTML = `<span class="gmina">${meeting.gmina}</span><br>
+                                          Manager: ${meeting.manager}<br>
+                                          Wielokąty: ${wielokaty}<br>
+                                          Procent: ${procent}%<br>
+                                          Sołtysi: ${sołtysi}<br>
+                                          Kościoły: ${kościoły}`; 
                     meetingList.appendChild(listItem); 
                 }); 
             } else { 
