@@ -149,6 +149,8 @@
                         } else {  
                             listItem.className = 'low-percentage';  
                         }  
+                    } else {  
+                        listItem.className = 'medium-percentage'; // Default class if percentage is 'n/d'  
                     }  
   
                     listItem.innerHTML = `<a href="${mapa}" target="_blank" class="gmina">${meeting.gmina}</a><br>  
