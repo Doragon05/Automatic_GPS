@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -60,12 +60,14 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script> <!-- Dodanie pliku językowego -->
     <script>
         // Link do pliku JSON
         const jsonUrl = 'https://script.google.com/macros/s/AKfycbzez77uRhYpXHJor5Byeud9FjLQ24-VtuSyqira-hf0lZXKFa9xdnAUR5HNaLI1tL31bQ/exec';
 
-        // Inicjalizacja kalendarza Flatpickr
+        // Inicjalizacja kalendarza Flatpickr z ustawieniem języka polskiego
         flatpickr("#calendar", {
+            locale: 'pl', // Ustawienie języka na polski
             inline: true,
             dateFormat: "d.m.Y",
             onChange: function(selectedDates, dateStr, instance) {
