@@ -36,8 +36,19 @@
  
         .meeting-list .gmina { 
             font-weight: bold; /* Pogrubienie nazw gmin */
-        } 
- 
+        }
+
+        /* Stylizacja tła na podstawie wartości procentów */
+        .high-percentage {
+            background-color: #e0f7e0; /* Lekko zielone tło */
+        }
+        .medium-percentage {
+            background-color: #ffffff; /* Tło domyślne */
+        }
+        .low-percentage {
+            background-color: #f7e0e0; /* Lekko czerwone tło */
+        }
+
         /* Styl responsywny */ 
         @media (max-width: 768px) { 
             .container { 
@@ -107,6 +118,18 @@
                     const procent = meeting.procent === '#VALUE!' ? 'n/d' : meeting.procent; 
                     const sołtysi = meeting.sołtysi === null ? 'n/d' : meeting.sołtysi; 
                     const kościoły = meeting.kościoły === null ? 'n/d' : meeting.kościoły; 
+
+                    // Dodanie odpowiedniej klasy na podstawie wartości procentów
+                    if (procent !== 'n/d') {
+                        const procentValue = parseFloat(procent);
+                        if (procentValue >= 90) {
+                            listItem.className = 'high-percentage';
+                        } else if (procentValue >= 70) {
+                            listItem.className = 'medium-percentage';
+                        } else {
+                            listItem.className = 'low-percentage';
+                        }
+                    }
 
                     listItem.innerHTML = `<span class="gmina">${meeting.gmina}</span><br>
                                           Manager: ${meeting.manager}<br>
