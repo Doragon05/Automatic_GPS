@@ -130,7 +130,7 @@
             if (filteredMeetings.length > 0) {  
                 filteredMeetings.forEach(meeting => {  
                     const listItem = document.createElement('li');  
-                    const wielokaty = meeting.wielokaty === null ? 'n/d' : meeting.wielokaty;  
+                    const wielokaty = meeting.wielokaty === "" ? 'n/d' : meeting.wielokaty;  
                     const procent = meeting.procent === '#VALUE!' ? 'n/d' : meeting.procent;  
                     const sołtysi = meeting.sołtysi === null ? 'n/d' : meeting.sołtysi;  
                     const kościoły = meeting.kościoły === null ? 'n/d' : meeting.kościoły;
