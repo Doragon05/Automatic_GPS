@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kalendarz z Google Sheets</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+        body {
+            background-color: #37453b;
+            color: #f2f5f3;
+            font-family: 'Arial', sans-serif;
+        }
+        .container {
+            display: flex;
+            height: 100vh;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .calendar-container {
+            width: 80%;
+            border-right: 1px solid #ccc;
+            padding: 20px;
+            background-color: #f2f5f3;
+        }
+        .details-container {
+            width: 80%;
+            padding: 20px;
+            background-color: #f2f5f3;
+        }
+        iframe {
+            width: 100%;
+            height: 600px;
+            border: none;
+        }
+        .menu {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+        }
+        .menu a {
+            display: block;
+            color: #f2f5f3;
+            text-decoration: none;
+            padding: 10px;
+            background-color: #37453b;
+            margin-bottom: 5px;
+            border-radius: 5px;
+        }
+        .menu a:hover {
+            background-color: #2a3c32;
+        }
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="menu">
+        <a href="index.html">Kalendarz</a>
+        <a href="harmonogram.html" target="_blank">Harmonogram</a>
+    </div>
+    <h1 style="text-align: center;">Kalendarz z Google Sheets</h1>
+    <div class="container">
+        <div class="calendar-container">
+            <input id="calendar" type="text" placeholder="Wybierz datę" style="width: 100%; padding: 10px; font-size: 16px;">
+        </div>
+        <div class="details-container">
+            <h2>Arkusz Kalkulacyjny</h2>
+            <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vSxREI2q3CRQ30ag3KsURw4-vcOzOzUvcjKMnsMkCFRakNqXrBCTF565GJiw90aiL9TZruoEwclreUw/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script>
+    <script>
+        flatpickr("#calendar", {
+            locale: 'pl',
+            inline: true,
+            dateFormat: "d.m.Y",
+        });
+    </script>
+</body>
+</html>
