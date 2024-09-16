@@ -153,13 +153,25 @@
                         listItem.className = 'medium-percentage'; // Default class if percentage is 'n/d'  
                     }  
   
-                    listItem.innerHTML = `<a href="${mapa}" target="_blank" class="gmina">${meeting.gmina}</a><br>  
-                                          Manager: ${meeting.manager}<br>  
-                                          Wielokąty: ${wielokaty}<br>  
-                                          Procent: ${procent}%<br>  
-                                          Sołtysi: ${sołtysi}<br>  
-                                          Kościoły: ${kościoły}<br>
-                                          Plakaty: ${plakaty}`;  
+                   listItem.innerHTML = `<a href="${mapa}" target="_blank" class="gmina">${meeting.gmina}</a><br>
+                      Manager: ${meeting.manager}<br>`;
+
+if (wielokaty !== 'n/d') {
+    listItem.innerHTML += `Wielokąty: ${wielokaty}<br>`;
+}
+if (procent !== 'n/d') {
+    listItem.innerHTML += `Procent: ${procent}%<br>`;
+}
+if (sołtysi !== 'n/d') {
+    listItem.innerHTML += `Sołtysi: ${sołtysi}<br>`;
+}
+if (kościoły !== 'n/d') {
+    listItem.innerHTML += `Kościoły: ${kościoły}<br>`;
+}
+if (plakaty !== 'n/d') {
+    listItem.innerHTML += `Plakaty: ${plakaty}`;
+}
+  
                     meetingList.appendChild(listItem);  
                 });  
             } else {  
