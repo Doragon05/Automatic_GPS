@@ -6,6 +6,55 @@
     <title>Kalendarz spotkań</title>  
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">  
     <style>  
+        .menu-container{
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            z-index: 1000; /* Aby przycisk był nad innymi elementami */
+        }
+        .menu-bar {
+            width: 30px;
+            height: 3px;
+            background-color: #f2f5f3; /* Kolor pasków */
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        .menu-container:hover .menu-bar {
+            background-color: #ccc; /* Kolor pasków przy najechaniu */
+        }
+
+        /* Stylizacja menu */
+        .menu {
+            display: none;
+            position: absolute;
+            top: 35px;
+            right: 0;
+            background-color: #f2f5f3;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1000;
+        }
+
+        .menu a {
+            display: block;
+            color: #000;
+            text-decoration: none;
+            padding: 10px;
+        }
+
+        .menu a:hover {
+            background-color: #e0e0e0;
+        }
+
+        /* Stylizacja po kliknięciu w przycisk menu */
+        .menu-container.active .menu {
+            display: block;
+        }
         body {  
             background-color: #37453b; /* Tło strony */  
             color: #f2f5f3; /* Kolor tekstu */  
@@ -92,6 +141,16 @@
             </ul>  
         </div>  
     </div>  
+    <div class="menu-container" onclick="toggleMenu()">
+    <div class="menu-bar"></div>
+    <div class="menu-bar"></div>
+    <div class="menu-bar"></div>
+    <div class="menu">
+        <a href="#" id="calendar-link">Kalendarz</a>
+        <a href="#" id="schedule-link" target="_blank">Harmonogram</a>
+    </div>
+</div>
+
   
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>  
     <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script> <!-- Dodanie pliku językowego -->  
@@ -179,5 +238,15 @@ if (plakaty !== 'n/d') {
             }  
         }  
     </script>  
+    <script>
+    // Funkcja do przełączania widoczności menu
+    function toggleMenu() {
+        document.querySelector('.menu-container').classList.toggle('active');
+    }
+
+    // Ustawienie linków w menu
+    document.getElementById('calendar-link').href = 'https://doragon05.github.io/kalendarz_gmin/'; // Link do aktualnej strony (kalendarz)
+    document.getElementById('schedule-link').href = 'https://greenmax2020.sharepoint.com/:x:/s/dzial-terenowych-sil-sprzedazy/ETzLx_rPRsFNt1ooG8RK0_4BLarL4zLC5eYuqq9gZu1Lgw'; // Podstaw link do harmonogramu tutaj
+</script>
 </body>  
 </html>
