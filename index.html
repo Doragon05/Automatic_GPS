@@ -1,183 +1,183 @@
-<!DOCTYPE html>   
-<html lang="pl">   
-<head>   
-    <meta charset="UTF-8">   
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">   
-    <title>Kalendarz spotkań</title>   
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">   
-    <style>   
-        body {   
-            background-color: #37453b; /* Tło strony */   
-            color: #f2f5f3; /* Kolor tekstu */   
-            font-family: 'Arial', sans-serif; /* Profesjonalna czcionka */   
-        }   
-   
-        .container {   
-            display: flex;   
-            height: 100vh;   
-        }   
-   
-        .calendar-container {   
-            width: 40%;   
-            border-right: 1px solid #ccc;   
-            padding: 20px;   
-            background-color: #f2f5f3; /* Kolor tła kalendarza */   
-        }   
-   
-        .details-container {   
-            width: 60%;   
-            padding: 20px;   
-            background-color: #f2f5f3; /* Kolor tła boxów */   
-        }   
-   
-        .meeting-list {   
-            list-style-type: none;   
-            padding: 0;   
-        }   
-   
-        .meeting-list li {   
-            margin: 4px 0; /* Zwiększenie interlinii */   
-            padding: 10px; /* Dodanie paddingu dla lepszej czytelności */   
-            border: 1px solid #ccc; /* Dodanie obramowania dla przypominania tabeli */   
-            border-radius: 5px; /* Zaokrąglenie narożników */   
-            color: #000; /* Kolor tekstu w boxach */   
-        }   
-   
-        .meeting-list .gmina {   
-            font-weight: bold; /* Pogrubienie nazw gmin */   
-            text-decoration: none; /* Brak podkreślenia */   
-            color: #000; /* Kolor tekstu (nie zmienia się) */   
-        }   
-   
-        .meeting-list .gmina a {   
-            text-decoration: none; /* Brak podkreślenia linku */   
-            color: inherit; /* Kolor linku dziedziczy kolor tekstu */   
-        }   
-   
-        /* Stylizacja tła na podstawie wartości procentów */   
-        .high-percentage {   
-            background-color: #e0f7e0; /* Lekko zielone tło */   
-        }   
-        .medium-percentage {   
-            background-color: #f2f5f3; /* Tło domyślne */   
-        }   
-        .low-percentage {   
-            background-color: #f7e0e0; /* Lekko czerwone tło */   
-        }   
-   
-        /* Styl responsywny */   
-        @media (max-width: 768px) {   
-            .container {   
-                flex-direction: column;   
-            }   
-   
-            .calendar-container, .details-container {   
-                width: 100%;   
-                border-right: none;   
-                border-bottom: 1px solid #ccc;   
-            }   
-        }   
-    </style>   
-</head>   
-<body>   
-    <h1 style="color: #f2f5f3;">Kalendarz spotkań</h1>   
-    <div class="container">   
-        <div class="calendar-container">   
-            <input id="calendar" type="text" placeholder="Wybierz datę" style="width: 100%; padding: 10px; font-size: 16px;">   
-        </div>   
-        <div class="details-container">   
-            <h2>Spotkania na wybrany dzień</h2>   
-            <ul id="meeting-list" class="meeting-list">   
-                <!-- Lista gmin pojawi się tutaj -->   
-            </ul>   
-        </div>   
-    </div>   
-   
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>   
-    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script> <!-- Dodanie pliku językowego -->   
-    <script>   
-        // Link do pliku JSON   
-        const jsonUrl = 'https://script.google.com/macros/s/AKfycbzez77uRhYpXHJor5Byeud9FjLQ24-VtuSyqira-hf0lZXKFa9xdnAUR5HNaLI1tL31bQ/exec';   
-   
-        // Inicjalizacja kalendarza Flatpickr z ustawieniem języka polskiego   
-        flatpickr("#calendar", {   
-            locale: 'pl', // Ustawienie języka na polski   
-            inline: true,   
-            dateFormat: "d.m.Y",   
-            onChange: function(selectedDates, dateStr, instance) {   
-                displayMeetings(dateStr);   
-            }   
-        });   
-   
-        // Funkcja do pobierania danych JSON   
-        fetch(jsonUrl)   
-            .then(response => response.json())   
-            .then(data => {   
-                window.meetingsData = data; // Zapisanie danych globalnie   
-            })   
-            .catch(error => {   
-                console.error('Błąd podczas pobierania danych JSON:', error);   
-            });   
-   
-        // Funkcja do wyświetlania spotkań na wybrany dzień   
-        function displayMeetings(dateStr) {   
-            const meetingList = document.getElementById('meeting-list');   
-            meetingList.innerHTML = ''; // Wyczyść listę   
-   
-            // Filtruj spotkania na podstawie wybranej daty   
-            const filteredMeetings = window.meetingsData.filter(meeting => meeting.data_spotkania === dateStr);   
-   
-            if (filteredMeetings.length > 0) {   
-                filteredMeetings.forEach(meeting => {   
-                    const listItem = document.createElement('li');   
-                    const wielokaty = meeting.wielokaty === "" ? 'n/d' : meeting.wielokaty;   
-                    const procent = meeting.procent === '#VALUE!' ? 'n/d' : meeting.procent;   
-                    const sołtysi = meeting.sołtysi === "" ? 'n/d' : meeting.sołtysi;   
-                    const kościoły = meeting.kościoły === "" ? 'n/d' : meeting.kościoły; 
-                    const plakaty = meeting.plakaty === "" ? 'n/d' : meeting.plakaty; 
-                    const mapa = meeting.mapa === "" ? '#' : meeting.mapa;   
-   
-                    // Dodanie odpowiedniej klasy na podstawie wartości procentów   
-                    if (procent !== 'n/d') {   
-                        const procentValue = parseFloat(procent);   
-                        if (procentValue >= 90) {   
-                            listItem.className = 'high-percentage';   
-                        } else if (procentValue >= 70) {   
-                            listItem.className = 'medium-percentage';   
-                        } else if (procentValue == 0) {   
-                            listItem.className = 'medium-percentage';   
-                        } else {   
-                            listItem.className = 'low-percentage';   
-                        }   
-                    } else {   
-                        listItem.className = 'medium-percentage'; // Default class if percentage is 'n/d'   
-                    }   
-   
-                   listItem.innerHTML = <a href="${mapa}" target="_blank" class="gmina">${meeting.gmina}</a><br> 
-                      Manager: ${meeting.manager}<br>; 
- 
-if (wielokaty !== 'n/d') { 
-    listItem.innerHTML += Wielokąty: ${wielokaty}<br>; 
-} 
-if (procent !== 'n/d') { 
-    listItem.innerHTML += Procent: ${procent}%<br>; 
-} 
-if (sołtysi !== 'n/d') { 
-    listItem.innerHTML += Sołtysi: ${sołtysi}<br>; 
-} 
-if (kościoły !== 'n/d') { 
-    listItem.innerHTML += Kościoły: ${kościoły}<br>; 
-} 
-if (plakaty !== 'n/d') { 
-    listItem.innerHTML += Plakaty: ${plakaty}; 
-} 
-   
-                    meetingList.appendChild(listItem);   
-                });   
-            } else {   
-                meetingList.innerHTML = '<li>Brak spotkań na wybrany dzień.</li>';   
-            }   
-        }   
-    </script>   
-</body>   
+<!DOCTYPE html>  
+<html lang="pl">  
+<head>  
+    <meta charset="UTF-8">  
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">  
+    <title>Kalendarz spotkań</title>  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">  
+    <style>  
+        body {  
+            background-color: #37453b; /* Tło strony */  
+            color: #f2f5f3; /* Kolor tekstu */  
+            font-family: 'Arial', sans-serif; /* Profesjonalna czcionka */  
+        }  
+  
+        .container {  
+            display: flex;  
+            height: 100vh;  
+        }  
+  
+        .calendar-container {  
+            width: 40%;  
+            border-right: 1px solid #ccc;  
+            padding: 20px;  
+            background-color: #f2f5f3; /* Kolor tła kalendarza */  
+        }  
+  
+        .details-container {  
+            width: 60%;  
+            padding: 20px;  
+            background-color: #f2f5f3; /* Kolor tła boxów */  
+        }  
+  
+        .meeting-list {  
+            list-style-type: none;  
+            padding: 0;  
+        }  
+  
+        .meeting-list li {  
+            margin: 4px 0; /* Zwiększenie interlinii */  
+            padding: 10px; /* Dodanie paddingu dla lepszej czytelności */  
+            border: 1px solid #ccc; /* Dodanie obramowania dla przypominania tabeli */  
+            border-radius: 5px; /* Zaokrąglenie narożników */  
+            color: #000; /* Kolor tekstu w boxach */  
+        }  
+  
+        .meeting-list .gmina {  
+            font-weight: bold; /* Pogrubienie nazw gmin */  
+            text-decoration: none; /* Brak podkreślenia */  
+            color: #000; /* Kolor tekstu (nie zmienia się) */  
+        }  
+  
+        .meeting-list .gmina a {  
+            text-decoration: none; /* Brak podkreślenia linku */  
+            color: inherit; /* Kolor linku dziedziczy kolor tekstu */  
+        }  
+  
+        /* Stylizacja tła na podstawie wartości procentów */  
+        .high-percentage {  
+            background-color: #e0f7e0; /* Lekko zielone tło */  
+        }  
+        .medium-percentage {  
+            background-color: #f2f5f3; /* Tło domyślne */  
+        }  
+        .low-percentage {  
+            background-color: #f7e0e0; /* Lekko czerwone tło */  
+        }  
+  
+        /* Styl responsywny */  
+        @media (max-width: 768px) {  
+            .container {  
+                flex-direction: column;  
+            }  
+  
+            .calendar-container, .details-container {  
+                width: 100%;  
+                border-right: none;  
+                border-bottom: 1px solid #ccc;  
+            }  
+        }  
+    </style>  
+</head>  
+<body>  
+    <h1 style="color: #f2f5f3;">Kalendarz spotkań</h1>  
+    <div class="container">  
+        <div class="calendar-container">  
+            <input id="calendar" type="text" placeholder="Wybierz datę" style="width: 100%; padding: 10px; font-size: 16px;">  
+        </div>  
+        <div class="details-container">  
+            <h2>Spotkania na wybrany dzień</h2>  
+            <ul id="meeting-list" class="meeting-list">  
+                <!-- Lista gmin pojawi się tutaj -->  
+            </ul>  
+        </div>  
+    </div>  
+  
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>  
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/pl.js"></script> <!-- Dodanie pliku językowego -->  
+    <script>  
+        // Link do pliku JSON  
+        const jsonUrl = 'https://script.google.com/macros/s/AKfycbzez77uRhYpXHJor5Byeud9FjLQ24-VtuSyqira-hf0lZXKFa9xdnAUR5HNaLI1tL31bQ/exec';  
+  
+        // Inicjalizacja kalendarza Flatpickr z ustawieniem języka polskiego  
+        flatpickr("#calendar", {  
+            locale: 'pl', // Ustawienie języka na polski  
+            inline: true,  
+            dateFormat: "d.m.Y",  
+            onChange: function(selectedDates, dateStr, instance) {  
+                displayMeetings(dateStr);  
+            }  
+        });  
+  
+        // Funkcja do pobierania danych JSON  
+        fetch(jsonUrl)  
+            .then(response => response.json())  
+            .then(data => {  
+                window.meetingsData = data; // Zapisanie danych globalnie  
+            })  
+            .catch(error => {  
+                console.error('Błąd podczas pobierania danych JSON:', error);  
+            });  
+  
+        // Funkcja do wyświetlania spotkań na wybrany dzień  
+        function displayMeetings(dateStr) {  
+            const meetingList = document.getElementById('meeting-list');  
+            meetingList.innerHTML = ''; // Wyczyść listę  
+  
+            // Filtruj spotkania na podstawie wybranej daty  
+            const filteredMeetings = window.meetingsData.filter(meeting => meeting.data_spotkania === dateStr);  
+  
+            if (filteredMeetings.length > 0) {  
+                filteredMeetings.forEach(meeting => {  
+                    const listItem = document.createElement('li');  
+                    const wielokaty = meeting.wielokaty === "" ? 'n/d' : meeting.wielokaty;  
+                    const procent = meeting.procent === '#VALUE!' ? 'n/d' : meeting.procent;  
+                    const sołtysi = meeting.sołtysi === "" ? 'n/d' : meeting.sołtysi;  
+                    const kościoły = meeting.kościoły === "" ? 'n/d' : meeting.kościoły;
+                    const plakaty = meeting.plakaty === "" ? 'n/d' : meeting.plakaty;
+                    const mapa = meeting.mapa === "" ? '#' : meeting.mapa;  
+  
+                    // Dodanie odpowiedniej klasy na podstawie wartości procentów  
+                    if (procent !== 'n/d') {  
+                        const procentValue = parseFloat(procent);  
+                        if (procentValue >= 90) {  
+                            listItem.className = 'high-percentage';  
+                        } else if (procentValue >= 70) {  
+                            listItem.className = 'medium-percentage';  
+                        } else if (procentValue == 0) {  
+                            listItem.className = 'medium-percentage';  
+                        } else {  
+                            listItem.className = 'low-percentage';  
+                        }  
+                    } else {  
+                        listItem.className = 'medium-percentage'; // Default class if percentage is 'n/d'  
+                    }  
+  
+                   listItem.innerHTML = `<a href="${mapa}" target="_blank" class="gmina">${meeting.gmina}</a><br>
+                      Manager: ${meeting.manager}<br>`;
+
+if (wielokaty !== 'n/d') {
+    listItem.innerHTML += `Wielokąty: ${wielokaty}<br>`;
+}
+if (procent !== 'n/d') {
+    listItem.innerHTML += `Procent: ${procent}%<br>`;
+}
+if (sołtysi !== 'n/d') {
+    listItem.innerHTML += `Sołtysi: ${sołtysi}<br>`;
+}
+if (kościoły !== 'n/d') {
+    listItem.innerHTML += `Kościoły: ${kościoły}<br>`;
+}
+if (plakaty !== 'n/d') {
+    listItem.innerHTML += `Plakaty: ${plakaty}`;
+}
+  
+                    meetingList.appendChild(listItem);  
+                });  
+            } else {  
+                meetingList.innerHTML = '<li>Brak spotkań na wybrany dzień.</li>';  
+            }  
+        }  
+    </script>  
+</body>  
 </html>
