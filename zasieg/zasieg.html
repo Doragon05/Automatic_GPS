@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zasięg ulotkowania</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <style>
+      /* Stylizacja menu oraz ogólny wygląd strony */ 
+        .menu-container{ 
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            cursor: pointer; 
+            z-index: 1000; /* Aby przycisk był nad innymi elementami */ 
+        } 
+        .menu-bar { 
+            width: 30px; 
+            height: 3px; 
+            background-color: #f2f5f3; /* Kolor pasków */ 
+            margin: 5px 0; 
+            transition: 0.3s; 
+        } 
+        .menu-container:hover .menu-bar { 
+            background-color: #ccc; /* Kolor pasków przy najechaniu */ 
+        } 
+        /* Stylizacja rozwijanego menu */ 
+        .menu { 
+            display: none; 
+            position: absolute; 
+            top: 35px; 
+            right: 0; 
+            background-color: #f2f5f3; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            padding: 10px; 
+            z-index: 1000; 
+        } 
+        .menu a { 
+            display: block; 
+            color: #000; 
+            text-decoration: none; 
+            padding: 10px; 
+        } 
+        .menu a:hover { 
+            background-color: #e0e0e0; 
+        } 
+        /* Stylizacja po kliknięciu w przycisk menu */ 
+        .menu-container.active .menu { 
+            display: block; 
+        } 
+        body {
+            background-color: #37453b;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            margin-top: 20px;
+        }
+
+        #search-input {
+            width: 80%;
+            padding: 10px;
+            font-size: 16px;
+            margin: 20px 0;
+        }
+
+        #results {
+            list-style-type: none;
+            padding: 0;
+            margin: 10px 0;
+            width: 80%;
+        }
+
+        #results li {
+            background: #f2f5f3;
+            padding: 10px;
+            margin: 5px 0;
+            cursor: pointer;
+        }
+
+        #map-iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        .legend {
+            display: flex;
+            align-items: center;
+            margin-top: 10px;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+
+        .legend div {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            margin-bottom: 5px;
+        }
+
+        .red { background-color: red; }
+        .black { background-color: black; }
+        .green { background-color: green; }
+        .blue { background-color: blue; }
+    </style>
+</head>
+<body>
+    <h1>Zasięg ulotkowania</h1>
+    <input type="text" id="search-input" placeholder="Wpisz nazwę gminy" oninput="searchGmina()">
+    <ul id="results"></ul>
+
+    <iframe id="map-iframe" src="https://www.google.com/maps/d/u/0/embed?mid=1qV0QjIFOrcRKK3G6mKE073h6FGbU9pY&ehbc=2E312F&noprof=1" width="640" height="480"></iframe>
+ <div class="menu-container" onclick="toggleMenu()"> 
+        <div class="menu-bar"></div> 
+        <div class="menu-bar"></div> 
+        <div class="menu-bar"></div> 
+        <div class="menu"> 
+            <a href="#" id="calendar-link">Kalendarz spotkań</a> 
+            <a href="#" id="schedule-link">Harmonogram map</a> 
+            <a href="#" id="report-link">Raporty ulotkarzy</a>
+            <a href="#" id="range-link">Zasięg ulotkowania</a> 
+        </div> 
+    </div> 
+    <div class="legend">
+        <div class="red"></div>
+        <div class="black"></div> <!-- Czerwona i czarna kropka obok siebie -->
+        Gmina nieodwiedzona
+        <div class="green"></div>
+        Gmina zaulotkowana
+        <div class="blue"></div>
+        Gmina zaulotkowana przez Astridę
+    </div>
+
+    <script>
+        let kmlData = [];
+
+        // Wczytaj lokalny plik KML
+        // Uwaga: Musisz uruchomić lokalny serwer, aby uniknąć problemów z CORS
+        fetch('mapa.kml')
+            .then(response => response.text())
+            .then(kmlText => {
+                const parser = new DOMParser();
+                const kml = parser.parseFromString(kmlText, 'text/xml');
+                const placemarks = kml.getElementsByTagName('Placemark');
+
+                // Przetwarzanie danych KML - nazwy gmin i współrzędne
+                for (let i = 0; i < placemarks.length; i++) {
+                    const name = placemarks[i].getElementsByTagName('name')[0].textContent;
+                    const coordinates = placemarks[i].getElementsByTagName('coordinates')[0].textContent.trim();
+
+                    kmlData.push({ name, coordinates });
+                }
+            })
+            .catch(error => console.error('Błąd wczytywania KML:', error));
+
+        // Funkcja wyszukiwania gminy
+        function searchGmina() {
+            const input = document.getElementById('search-input').value.toLowerCase();
+            const results = document.getElementById('results');
+            results.innerHTML = ''; // Wyczyść wyniki
+
+            if (input.length === 0) return;
+
+            kmlData.forEach(gmina => {
+                if (gmina.name.toLowerCase().includes(input)) {
+                    const li = document.createElement('li');
+                    li.textContent = gmina.name;
+                    li.onclick = () => scrollToGmina(gmina.coordinates);
+                    results.appendChild(li);
+                }
+            });
+        }
+
+        // Funkcja przewijania mapy do wybranej gminy
+        function scrollToGmina(coordinates) {
+            const [lng, lat] = coordinates.split(','); // Współrzędne w KML są w formacie "longitude,latitude"
+            
+            const iframe = document.getElementById('map-iframe');
+            const mapUrl = `https://www.google.com/maps/d/u/0/embed?mid=1qV0QjIFOrcRKK3G6mKE073h6FGbU9pY&ll=${lat},${lng}&z=12`; // Ustawienie współrzędnych i zoomu
+
+            iframe.src = mapUrl;
+        }
+    </script>
+   <script> 
+        // Funkcja do przełączania widoczności menu 
+        function toggleMenu() { 
+            document.querySelector('.menu-container').classList.toggle('active'); 
+        } 
+
+        // Ustawienie przykładowych linków w menu 
+        document.getElementById('calendar-link').href = 'https://doragon05.github.io/kalendarz_gmin/'; 
+        document.getElementById('schedule-link').href = 'https://greenmax2020.sharepoint.com/:x:/s/dzial-terenowych-sil-sprzedazy/ETzLx_rPRsFNt1ooG8RK0_4BLarL4zLC5eYuqq9gZu1Lgw'; 
+        document.getElementById('report-link').href = 'https://doragon05.github.io/kalendarz_gmin/raporty.html'; 
+    </script> 
+</body>
+</html>
