@@ -1,0 +1,88 @@
+<!DOCTYPE html> 
+<html lang="pl"> 
+<head> 
+    <meta charset="UTF-8"> 
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+    <title>Strona z menu</title> 
+    <style> 
+        /* Stylizacja menu oraz ogólny wygląd strony */ 
+        .menu-container{ 
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            display: flex; 
+            flex-direction: column; 
+            cursor: pointer; 
+            z-index: 1000; /* Aby przycisk był nad innymi elementami */ 
+        } 
+        .menu-bar { 
+            width: 30px; 
+            height: 3px; 
+            background-color: #f2f5f3; /* Kolor pasków */ 
+            margin: 5px 0; 
+            transition: 0.3s; 
+        } 
+        .menu-container:hover .menu-bar { 
+            background-color: #ccc; /* Kolor pasków przy najechaniu */ 
+        } 
+        /* Stylizacja rozwijanego menu */ 
+        .menu { 
+            display: none; 
+            position: absolute; 
+            top: 35px; 
+            right: 0; 
+            background-color: #f2f5f3; 
+            border: 1px solid #ccc; 
+            border-radius: 5px; 
+            padding: 10px; 
+            z-index: 1000; 
+        } 
+        .menu a { 
+            display: block; 
+            color: #000; 
+            text-decoration: none; 
+            padding: 10px; 
+        } 
+        .menu a:hover { 
+            background-color: #e0e0e0; 
+        } 
+        /* Stylizacja po kliknięciu w przycisk menu */ 
+        .menu-container.active .menu { 
+            display: block; 
+        } 
+        /* Stylizacja strony i jej kolorystyka */ 
+        body { 
+            background-color: #37453b; /* Tło strony */ 
+            color: #f2f5f3; /* Kolor tekstu */ 
+            font-family: 'Arial', sans-serif; /* Profesjonalna czcionka */ 
+            margin: 0; 
+            padding: 0; 
+        } 
+    </style> 
+</head> 
+<body> 
+    <!-- Menu rozwijane w prawym górnym rogu --> 
+    <div class="menu-container" onclick="toggleMenu()"> 
+        <div class="menu-bar"></div> 
+        <div class="menu-bar"></div> 
+        <div class="menu-bar"></div> 
+        <div class="menu"> 
+            <a href="#" id="calendar-link">Kalendarz spotkań</a> 
+            <a href="#" id="schedule-link">Harmonogram map</a> 
+            <a href="#" id="report-link">Raporty ulotkarzy</a> 
+        </div> 
+    </div> 
+
+    <script> 
+        // Funkcja do przełączania widoczności menu 
+        function toggleMenu() { 
+            document.querySelector('.menu-container').classList.toggle('active'); 
+        } 
+
+        // Ustawienie przykładowych linków w menu 
+        document.getElementById('calendar-link').href = 'https://twojalink.com/kalendarz'; 
+        document.getElementById('schedule-link').href = 'https://twojalink.com/harmonogram'; 
+        document.getElementById('report-link').href = 'https://twojalink.com/raporty'; 
+    </script> 
+</body> 
+</html>
