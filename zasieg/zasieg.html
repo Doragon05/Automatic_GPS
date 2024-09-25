@@ -17,7 +17,7 @@
         .menu-bar {
             width: 30px;
             height: 3px;
-            background-color: #f2f5f3; /* Kolor pasków */
+            background-color: black; /* Kolor pasków */
             margin: 5px 0;
             transition: 0.3s;
         }
@@ -194,7 +194,7 @@
                 const lng = gmina.lng;
 
                 // Ustawia nową lokalizację i przybliżenie dla iframe (trzeba eksperymentować z poziomem przybliżenia)
-                mapIframe.src = `https://www.google.com/maps/d/u/0/embed?mid=1O5dDyh...&ll=${lat},${lng}&z=10`;
+                mapIframe.src = `https://www.google.com/maps/d/u/0/embed?mid=1qV0QjIFOrcRKK3G6mKE073h6FGbU9pY&ehbc=2E312F&noprof=1&ll=${lat},${lng}&z=10`;
             });
             searchResults.appendChild(li);
         });
