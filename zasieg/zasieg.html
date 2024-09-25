@@ -62,7 +62,16 @@
 <body> 
 
 <h1>Zasięg GreenMax</h1> 
-
+<div class="menu-container" onclick="toggleMenu()"> 
+        <div class="menu-bar"></div> 
+        <div class="menu-bar"></div> 
+        <div class="menu-bar"></div> 
+        <div class="menu"> 
+            <a href="#" id="calendar-link">Kalendarz spotkań</a> 
+            <a href="#" id="schedule-link">Harmonogram map</a> 
+            <a href="#" id="report-link">Raporty ulotkarzy</a>
+            <a href="#" id="range-link">Zasięg ulotkowania</a> 
+        </div> 
 <div class="search-container"> 
     <input type="text" id="search" placeholder="Wyszukaj gminę..." style="width: 100%; padding: 10px;"> 
     <ul id="search-results" class="search-results"></ul> 
