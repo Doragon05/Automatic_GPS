@@ -127,7 +127,6 @@
     <div><span class="green"></span>Gmina zaulotkowana</div> 
     <div><span class="blue"></span>Gmina zaulotkowana przez Astridę</div> 
 </div> 
-
 <div class="menu-container" onclick="toggleMenu()"> 
     <div class="menu-bar"></div> 
     <div class="menu-bar"></div> 
@@ -138,74 +137,79 @@
         <a href="#" id="report-link">Raporty ulotkarzy</a> 
         <a href="#" id="range-link">Zasięg ulotkowania</a> 
     </div> 
-</div> 
+    <script> 
+        // Funkcja do przełączania widoczności menu 
+        function toggleMenu() { 
+            document.querySelector('.menu-container').classList.toggle('active'); 
+        } 
 
-<script> 
-    // Funkcja do przełączania widoczności menu 
-    function toggleMenu() { 
-        document.querySelector('.menu-container').classList.toggle('active'); 
-    } 
+        // Ustawienie linków w menu 
+        document.getElementById('calendar-link').href = 'https://doragon05.github.io/kalendarz_gmin/'; // Link do aktualnej strony (kalendarz) 
+        document.getElementById('schedule-link').href = 'https://greenmax2020.sharepoint.com/:x:/s/dzial-terenowych-sil-sprzedazy/ETzLx_rPRsFNt1ooG8RK0_4BLarL4zLC5eYuqq9gZu1Lgw'; // Podstaw link do harmonogramu tutaj 
+        document.getElementById('report-link').href = 'https://doragon05.github.io/kalendarz_gmin/raporty.html'; // Link do aktualnej strony (kalendarz) 
+        document.getElementById('range-link').href = 'https://doragon05.github.io/kalendarz_gmin/zasieg/zasieg.html'; // Link do aktualnej strony (kalendarz) 
 
-    // Ustawienie linków w menu 
-    document.getElementById('calendar-link').href = 'https://doragon05.github.io/kalendarz_gmin/'; // Link do aktualnej strony (kalendarz) 
-    document.getElementById('schedule-link').href = 'https://greenmax2020.sharepoint.com/:x:/s/dzial-terenowych-sil-sprzedazy/ETzLx_rPRsFNt1ooG8RK0_4BLarL4zLC5eYuqq9gZu1Lgw'; // Podstaw link do harmonogramu tutaj 
-    document.getElementById('report-link').href = 'https://doragon05.github.io/kalendarz_gmin/raporty.html'; // Link do aktualnej strony (kalendarz) 
-    document.getElementById('range-link').href = 'https://doragon05.github.io/kalendarz_gmin/zasieg/zasieg.html'; // Link do aktualnej strony (kalendarz) 
-</script> 
+        const kmlUrl = './mapa.kml';  // Upewnij się, że plik KML jest na serwerze 
 
-<script> 
-    const kmlUrl = './mapa.kml';  // Upewnij się, że plik KML jest na serwerze 
+        let gminy = []; 
 
-    let gminy = []; 
-
-    // Pobieranie danych z KML 
-    fetch(kmlUrl) 
-        .then(response => response.text()) 
-        .then(kmlText => { 
-            const parser = new DOMParser(); 
-            const kml = parser.parseFromString(kmlText, 'application/xml'); 
-            const placemarks = kml.getElementsByTagName('Placemark'); 
-             
-            for (let i = 0; i < placemarks.length; i++) { 
-                const name = placemarks[i].getElementsByTagName('name')[0].textContent; 
-                const coordinates = placemarks[i].getElementsByTagName('coordinates')[0].textContent.trim().split(','); 
+        // Pobieranie danych z KML 
+        fetch(kmlUrl) 
+            .then(response => response.text()) 
+            .then(kmlText => { 
+                const parser = new DOMParser(); 
+                const kml = parser.parseFromString(kmlText, 'application/xml'); 
+                const placemarks = kml.getElementsByTagName('Placemark'); 
                  
-                gminy.push({ 
-                    name: name, 
-                    lat: parseFloat(coordinates[1]), 
-                    lng: parseFloat(coordinates[0]) 
-                }); 
-            } 
-        }); 
-
-    // Funkcja obsługująca wyszukiwanie 
-    document.getElementById('search').addEventListener('input', function() { 
-        const searchTerm = this.value.toLowerCase(); 
-        const searchResults = document.getElementById('search-results'); 
-        searchResults.innerHTML = ''; 
-
-        // Filtruj wyniki 
-        const filteredGminy = gminy.filter(gmina => gmina.name.toLowerCase().includes(searchTerm)).slice(0, 4); 
-
-        filteredGminy.forEach(gmina => { 
-            const li = document.createElement('li'); 
-            li.textContent = gmina.name; 
-            li.addEventListener('click', function() { 
-                // Skrypt do zmiany widoku iframe na odpowiednią gminę 
-                const mapIframe = document.getElementById('map'); 
-                const lat = gmina.lat; 
-                const lng = gmina.lng; 
-
-                // Ustawia nową lokalizację i przybliżenie dla iframe 
-                mapIframe.src = `https://www.google.com/maps/d/u/0/embed?mid=1qV0QjIFOrcRKK3G6mKE073h6FGbU9pY&ehbc=2E312F&noprof=1&ll=${lat},${lng}&z=10`; 
-                
-                // Ukrywa wyniki wyszukiwania po kliknięciu 
-                searchResults.innerHTML = ''; 
+                for (let i = 0; i < placemarks.length; i++) { 
+                    const name = placemarks[i].getElementsByTagName('name')[0].textContent; 
+                    const coordinates = placemarks[i].getElementsByTagName('coordinates')[0].textContent.trim().split(','); 
+                     
+                    gminy.push({ 
+                        name: name, 
+                        lat: parseFloat(coordinates[1]), 
+                        lng: parseFloat(coordinates[0]) 
+                    }); 
+                } 
             }); 
-            searchResults.appendChild(li); 
+
+        // Funkcja obsługująca wyszukiwanie 
+        document.getElementById('search').addEventListener('input', function() { 
+            const searchTerm = this.value.toLowerCase(); 
+            const searchResults = document.getElementById('search-results'); 
+            searchResults.innerHTML = ''; 
+
+            // Filtruj wyniki 
+            const filteredGminy = gminy.filter(gmina => gmina.name.toLowerCase().includes(searchTerm)).slice(0, 4); 
+
+            filteredGminy.forEach(gmina => { 
+                const li = document.createElement('li'); 
+                li.textContent = gmina.name; 
+                li.addEventListener('click', function() { 
+                    // Skrypt do zmiany widoku iframe na odpowiednią gminę 
+                    const mapIframe = document.getElementById('map'); 
+                    const lat = gmina.lat; 
+                    const lng = gmina.lng; 
+
+                    // Ustawia nową lokalizację i przybliżenie dla iframe 
+                    mapIframe.src = `https://www.google.com/maps/d/u/0/embed?mid=1qV0QjIFOrcRKK3G6mKE073h6FGbU9pY&ehbc=2E312F&noprof=1&ll=${lat},${lng}&z=10`; 
+                    
+                    // Ukrywa wyniki wyszukiwania po kliknięciu 
+                    searchResults.innerHTML = ''; 
+                }); 
+                searchResults.appendChild(li); 
+            }); 
         }); 
-    }); 
-</script> 
+
+        // Ukrywanie wyników wyszukiwania po kliknięciu poza polem wyszukiwania
+        document.addEventListener('click', function(event) {
+            const searchContainer = document.querySelector('.search-container');
+            const searchResults = document.getElementById('search-results');
+            if (!searchContainer.contains(event.target)) {
+                searchResults.innerHTML = ''; 
+            }
+        });
+    </script> 
 
 </body> 
 </html>
