@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Telewizor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f2f5f3;
+            position: relative;
+        }
+        .menu-container {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            cursor: pointer;
+            z-index: 1000;
+        }
+        .menu-bar {
+            width: 30px;
+            height: 3px;
+            background-color: black;
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+        .menu-bar:hover {
+            background-color: #ccc;
+        }
+        .menu {
+            display: none;
+            position: absolute;
+            top: 35px;
+            right: 0;
+            background-color: #f2f5f3;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            padding: 10px;
+            z-index: 1000;
+        }
+        .menu a {
+            display: block;
+            color: #000;
+            text-decoration: none;
+            padding: 10px;
+        }
+        .menu a:hover {
+            background-color: #e0e0e0;
+        }
+        .menu-container.active .menu {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="menu-container" onclick="toggleMenu()">
+    <div class="menu-bar"></div>
+    <div class="menu-bar"></div>
+    <div class="menu-bar"></div>
+    <div class="menu">
+        <a href="https://doragon05.github.io/kalendarz_gmin/">Kalendarz spotkań</a>
+        <a href="https://greenmax2020.sharepoint.com/:x:/s/dzial-terenowych-sil-sprzedazy/ETzLx_rPRsFNt1ooG8RK0_4BLarL4zLC5eYuqq9gZu1Lgw">Harmonogram map</a>
+        <a href="https://doragon05.github.io/kalendarz_gmin/raporty.html">Raporty ulotkarzy</a>
+        <a href="https://doragon05.github.io/kalendarz_gmin/zasieg/zasieg.html">Zasięg ulotkowania</a>
+    </div>
+</div>
+
+<script>
+    // Funkcja do przełączania widoczności menu
+    function toggleMenu() {
+        document.querySelector('.menu-container').classList.toggle('active');
+    }
+</script>
+
+</body>
+</html>
